@@ -67,6 +67,7 @@ cookie::string& cookie::string::operator=(const string &ref) {
         std::cerr << "string created without size or c string" << std::endl;
         #endif
     } else {
+        delete[] this->_data;
         this->_data = new char[ref._size + 1];
 
         this->_data[ref._size] = '\0';
