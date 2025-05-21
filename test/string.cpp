@@ -4,12 +4,10 @@ int main() {
     cookie::string hello("hello");
     cookie::string world("world");
 
-    cookie::string buffer;
-
-    buffer = hello + world;
-
+    cookie::string buffer = hello + world;
     if (buffer != "helloworld")
         return 1;
+
     buffer = (hello, world);
     if (buffer != "hello world")
         return 1;
