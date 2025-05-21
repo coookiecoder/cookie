@@ -6,7 +6,7 @@ set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} -g3)
 include_directories(include)
 
 add_library(cookie_string
-        source/cookie_string/string.cpp
+        source/string.cpp
 )
 
 add_library(cookie STATIC
