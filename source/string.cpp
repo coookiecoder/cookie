@@ -97,6 +97,19 @@ cookie::string& cookie::string::operator=(string &&ref) noexcept {
     return *this;
 }
 
+cookie::string& cookie::string::operator=(const char *c_string) {
+    delete[] this->_data;
+
+    this->_data = new char[strlen(c_string) + 1];
+    this->_size = strlen(c_string);
+
+    for (int index = 0; index < this->_size; index++) {
+        this->_data[index] = c_string[index];
+    }
+
+    return *this;
+}
+
 cookie::string& cookie::string::operator+=(const string &rhs) {
     char* result = new char[this->_size + rhs._size + 1];
 
@@ -159,6 +172,22 @@ std::ostream& cookie::operator<<(std::ostream& os, const string& string) {
     os << string.data();
 
     return os;
+}
+
+std::istream& cookie::operator>>(std::istream& is, string& string) {
+    char buffer[1024] = {};
+
+    string = "";
+
+    do {
+        is >> buffer;
+        string += buffer;
+
+        if (is.eof())
+            return is;
+    } while (strlen(buffer) == 1023 && is.peek() != '\n');
+    
+    return is;
 }
 
 bool cookie::operator==(const string& lhs, const string& rhs) {
@@ -261,4 +290,18 @@ cookie::string cookie::operator,(const string& lhs, const char* rhs) {
     result += rhs;
 
     return result;
+}
+
+unsigned long cookie::strlen(const string& string) {
+    return string.size();
+}
+
+unsigned long cookie::strlen(const char* string) {
+    unsigned long length = 0;
+
+    while (string[length] != '\0') {
+        length++;
+    }
+
+    return length;
 }
