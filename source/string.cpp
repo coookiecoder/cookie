@@ -1,4 +1,4 @@
-#include "../include/string.hpp"
+#include <string.hpp>
 
 cookie::string::string() noexcept {
     #if defined(WARNING)

@@ -10,6 +10,11 @@ add_library(cookie_string OBJECT
 		source/string.cpp
 )
 
+add_library(cookie_matrix OBJECT
+		source/matrix.cpp
+)
+
 add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_string>
+		$<TARGET_OBJECTS:cookie_matrix>
 )
