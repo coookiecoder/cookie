@@ -115,6 +115,13 @@ namespace cookie {
         if (&other == this)
             return *this;
 
+        if (this->_data) {
+            for (int row = 0; row < this->_row; ++row) {
+                delete[] this->_data[row];
+            }
+            delete[] this->_data;
+        }
+
         this->_data = new Type*[other.row()];
 
         for (int new_row = 0; new_row < other.row(); ++new_row) {
