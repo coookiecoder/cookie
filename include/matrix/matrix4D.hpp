@@ -8,6 +8,9 @@ namespace cookie {
         public:
             Matrix4D();
             Matrix4D(std::initializer_list<std::initializer_list<Type>> value_list);
+            explicit Matrix4D(const Matrix<Type>& other);
+
+            Matrix4D<Type>& operator=(const Matrix<Type>& other);
 
             ~Matrix4D() override = default;
     };
@@ -16,6 +19,43 @@ namespace cookie {
     Matrix4D<Type>::Matrix4D() : Matrix<Type>(4, 4) {
 
     }
+
+    template <class Type>
+    Matrix4D<Type>::Matrix4D(const Matrix<Type>& other) : Matrix<Type>(other) {
+        if (this->_col != 4 || this->_row != 4) {
+            throw std::invalid_argument("Invalid matrix size");
+        }
+    }
+
+    template <class Type>
+    Matrix4D<Type>& Matrix4D<Type>::operator=(const Matrix<Type>& other) {
+        if (&other == this)
+            return *this;
+
+        if (other.row() != 4 || other.col() != 4) {
+            throw std::invalid_argument("Invalid matrix size");
+        }
+
+        if (this->_data) {
+            for (int row = 0; row < this->_row; ++row) {
+                delete[] this->_data[row];
+            }
+            delete[] this->_data;
+        }
+
+        this->_data = new Type*[other.row()];
+
+        for (int new_row = 0; new_row < other.row(); ++new_row) {
+            this->_data[new_row] = new Type[other.col()];
+
+            for (int new_col = 0; new_col < other.col(); ++new_col) {
+                this->_data[new_row][new_col] = other[new_row][new_col];
+            }
+        }
+
+        return *this;
+    }
+
 
     template <class Type>
     Matrix4D<Type>::Matrix4D(std::initializer_list<std::initializer_list<Type>> value_list) : Matrix<Type>(value_list) {
