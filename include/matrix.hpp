@@ -10,30 +10,49 @@
 namespace cookie {
     template<class Type>
     class Matrix {
-        protected:
-            Type **_data = nullptr;
-            unsigned long _row = 0;
-            unsigned long _col = 0;
+    protected:
+        Type **_data = nullptr;
+        unsigned long _row = 0;
+        unsigned long _col = 0;
 
-        public:
-            Matrix() = default;
-            Matrix(const Matrix<Type> &other);
-            Matrix(Matrix<Type> &&other) noexcept ;
+    public:
+        Matrix() = default;
+        Matrix(const Matrix<Type> &other);
+        Matrix(Matrix<Type> &&other) noexcept ;
 
-            Matrix(unsigned long row, unsigned long col);
-            Matrix(std::initializer_list<std::initializer_list<Type>> value_list);
+        Matrix(unsigned long row, unsigned long col);
+        Matrix(std::initializer_list<std::initializer_list<Type>> value_list);
 
-            Matrix<Type> &operator=(const Matrix<Type> &other);
-            Matrix<Type> &operator=(Matrix<Type> &&other) noexcept ;
+        Matrix<Type> &operator=(const Matrix<Type> &other);
+        Matrix<Type> &operator=(Matrix<Type> &&other) noexcept ;
 
-            [[nodiscard]] unsigned long row() const;
-            [[nodiscard]] unsigned long col() const;
+        [[nodiscard]] unsigned long row() const;
+        [[nodiscard]] unsigned long col() const;
 
-            Type* operator[](unsigned long row) const;
+        Type* operator[](unsigned long row) const;
 
-            virtual ~Matrix();
+        Matrix<Type> transpose() const;
+
+        virtual ~Matrix();
     };
+}
 
+namespace cookie {
+    template <class Type>
+    Matrix<Type> transpose(const Matrix<Type>& matrix) {
+        Matrix<Type> result(matrix.col(), matrix.row());
+
+        for (int row = 0; row < matrix.row(); ++row) {
+            for (int col = 0; col < matrix.col(); ++col) {
+                result[row][col] = matrix[col][row];
+            }
+        }
+
+        return result;
+    }
+}
+
+namespace cookie {
     template <class Type>
     Matrix<Type>::Matrix(const Matrix<Type>& other) : Matrix(other.row(), other.col()) {
         for (int row = 0; row < other.row(); ++row) {
@@ -139,6 +158,14 @@ namespace cookie {
     }
 
     template <class Type>
+    Matrix<Type> Matrix<Type>::transpose() const {
+        Matrix<Type> result = cookie::transpose(*this);
+
+        return result;
+    }
+
+
+    template <class Type>
     Matrix<Type>::~Matrix() {
         for (int row = 0; row < _row; ++row) {
             delete[] _data[row];
@@ -160,21 +187,6 @@ namespace cookie {
         }
 
         return os;
-    }
-}
-
-namespace cookie {
-    template <class Type>
-    Matrix<Type> transpose(const Matrix<Type>& matrix) {
-        Matrix<Type> result(matrix.col(), matrix.row());
-
-        for (int row = 0; row < matrix.row(); ++row) {
-            for (int col = 0; col < matrix.col(); ++col) {
-                result[row][col] = matrix[col][row];
-            }
-        }
-
-        return result;
     }
 }
 
