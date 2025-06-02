@@ -183,6 +183,11 @@ namespace cookie {
 
     template<class Type>
     std::ostream& operator<<(std::ostream& os, const Matrix<Type>& matrix) {
+        if (matrix.col() == 0 || matrix.row() == 0) {
+            os << "Matrix empty";
+            return os;
+        }
+
         for (int row = 0; row < matrix.row(); ++row) {
             for (int col = 0; col < matrix.col(); ++col) {
                 os << "[" << std::setw(MATRIX_SET_W) << matrix[row][col] << "]";
