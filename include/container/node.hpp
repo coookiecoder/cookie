@@ -48,7 +48,10 @@ namespace cookie {
 
 namespace cookie {
     template <class Type>
-    Node<Type>::Node() = default;
+    Node<Type>::Node()
+    {
+        this->_data = new Type();
+    }
 
     template <class Type>
     Node<Type>::Node(const Type* data)
