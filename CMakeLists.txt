@@ -17,6 +17,7 @@ add_library(cookie_matrix OBJECT
 add_library(cookie_container OBJECT
 		source/container/list.cpp
 		source/container/node.cpp
+		source/container/array.cpp
 )
 
 add_library(cookie STATIC
