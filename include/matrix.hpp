@@ -201,7 +201,3 @@ namespace cookie {
         return os;
     }
 }
-
-#include <matrix/matrix2D.hpp>
-#include <matrix/matrix3D.hpp>
-#include <matrix/matrix4D.hpp>
