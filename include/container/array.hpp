@@ -18,15 +18,15 @@ namespace cookie {
 
     template <class Type, unsigned long size>
     class ArrayStack {
-    protected:
-        Type _data[size];
+        protected:
+            Type _data[size];
 
-    public:
-        ArrayStack() = default;
+        public:
+            ArrayStack() = default;
 
-        Type& operator[](unsigned long index);
+            Type& operator[](unsigned long index);
 
-        ~ArrayStack() = default;
+            ~ArrayStack() = default;
     };
 }
 
