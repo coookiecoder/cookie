@@ -154,22 +154,20 @@ namespace cookie {
         return current->getData();
     }
 
-
     template <class Type>
     List<Type>::~List()
     {
         if (this->_start)
         {
             Node<Type>* current = this->_start;
+            Node<Type>* backup = this->_start->getNext();
 
-            this->_start = this->_start->getNext();
-
-            for (int list_size = 1; list_size < this->_size; ++list_size)
+            while (backup)
             {
                 delete current;
 
-                current = this->_start;
-                this->_start = this->_start->getNext();
+                current = backup;
+                backup = backup->getNext();
             }
 
             delete current;
