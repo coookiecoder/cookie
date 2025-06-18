@@ -4,16 +4,29 @@
 
 namespace cookie {
     template <class Type, unsigned long size>
-    class Array {
+    class ArrayHeap {
         protected:
-            Type _data[size] = {};
+            Type *_data;
 
         public:
-            Array();
+            ArrayHeap();
 
             Type& operator[](unsigned long index);
 
-            ~Array();
+            ~ArrayHeap();
+    };
+
+    template <class Type, unsigned long size>
+    class ArrayStack {
+    protected:
+        Type _data[size];
+
+    public:
+        ArrayStack() = default;
+
+        Type& operator[](unsigned long index);
+
+        ~ArrayStack() = default;
     };
 }
 
@@ -23,14 +36,26 @@ namespace cookie {
 
 namespace cookie {
     template <class Type, unsigned long size>
-    Array<Type, size>::Array() = default;
+    ArrayHeap<Type, size>::ArrayHeap()
+    {
+        this->_data = new Type[size];
+    }
 
     template <class Type, unsigned long size>
-    Type& Array<Type, size>::operator[](unsigned long index)
+    Type& ArrayHeap<Type, size>::operator[](unsigned long index)
     {
         return this->_data[index];
     }
 
     template <class Type, unsigned long size>
-    Array<Type, size>::~Array() = default;
+    ArrayHeap<Type, size>::~ArrayHeap()
+    {
+        delete[] this->_data;
+    }
+
+    template <class Type, unsigned long size>
+    Type& ArrayStack<Type, size>::operator[](unsigned long index)
+    {
+        return this->_data[index];
+    }
 }
