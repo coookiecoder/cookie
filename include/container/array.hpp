@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 namespace cookie {
-    template <class Type, unsigned long size>
+    template <class Type, unsigned long>
     class ArrayHeap {
         protected:
             Type *_data;

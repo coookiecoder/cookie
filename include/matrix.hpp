@@ -17,21 +17,27 @@ namespace cookie {
 
     public:
         Matrix() = default;
-        Matrix(const Matrix<Type> &other);
-        Matrix(Matrix<Type> &&other) noexcept ;
+        Matrix(const Matrix &other);
+        Matrix(Matrix &&other) noexcept ;
 
         Matrix(unsigned long row, unsigned long col);
         Matrix(std::initializer_list<std::initializer_list<Type>> value_list);
 
-        Matrix<Type> &operator=(const Matrix<Type> &other);
-        Matrix<Type> &operator=(Matrix<Type> &&other) noexcept ;
+        Matrix &operator=(const Matrix &other);
+        Matrix &operator=(Matrix &&other) noexcept;
 
         [[nodiscard]] unsigned long row() const;
         [[nodiscard]] unsigned long col() const;
 
         Type* operator[](unsigned long row) const;
 
-        Matrix<Type> transpose() const;
+        Matrix operator+(const Matrix& other) const;
+        Matrix operator-(const Matrix& other) const;
+
+        Matrix& operator+=(const Matrix& other);
+        Matrix& operator-=(const Matrix& other);
+
+        Matrix transpose() const;
 
         virtual ~Matrix();
     };
@@ -54,7 +60,7 @@ namespace cookie {
 
 namespace cookie {
     template <class Type>
-    Matrix<Type>::Matrix(const Matrix<Type>& other) : Matrix(other.row(), other.col()) {
+    Matrix<Type>::Matrix(const Matrix& other) : Matrix(other.row(), other.col()) {
         for (int row = 0; row < other.row(); ++row) {
             for (int col = 0; col < other.col(); ++col) {
                 this->_data[row][col] = other._data[row][col];
@@ -63,7 +69,7 @@ namespace cookie {
     }
 
     template <class Type>
-    Matrix<Type>::Matrix(Matrix<Type>&& other)  noexcept {
+    Matrix<Type>::Matrix(Matrix&& other)  noexcept {
         this->_data = other._data;
         this->_row = other._row;
         this->_col = other._col;
@@ -111,7 +117,7 @@ namespace cookie {
     }
 
     template <class Type>
-    Matrix<Type>& Matrix<Type>::operator=(const Matrix<Type>& other) {
+    Matrix<Type>& Matrix<Type>::operator=(const Matrix& other) {
         if (&other == this)
             return *this;
 
@@ -136,7 +142,7 @@ namespace cookie {
     }
 
     template <class Type>
-    Matrix<Type>& Matrix<Type>::operator=(Matrix<Type>&& other) noexcept {
+    Matrix<Type>& Matrix<Type>::operator=(Matrix&& other) noexcept {
         this->_data = other._data;
         this->_row = other._row;
         this->_col = other._col;
@@ -166,9 +172,71 @@ namespace cookie {
 
     template <class Type>
     Matrix<Type> Matrix<Type>::transpose() const {
-        Matrix<Type> result = cookie::transpose(*this);
+        Matrix result = cookie::transpose(*this);
 
         return result;
+    }
+
+    template<class Type>
+    Matrix<Type> Matrix<Type>::operator+(const Matrix &other) const {
+        if (this->row() != other.row() || this->col() != other.col())
+            throw std::invalid_argument("invalid matrix size");
+
+        Matrix result = *this;
+
+        for (unsigned long row = 0; row < this->row(); ++row) {
+            for (unsigned long col = 0; col < this->col(); ++col) {
+                result._data[row][col] += other._data[row][col];
+            }
+        }
+
+        return result;
+    }
+
+    template<class Type>
+    Matrix<Type> Matrix<Type>::operator-(const Matrix &other) const {
+        if (this->row() != other.row() || this->col() != other.col())
+            throw std::invalid_argument("invalid matrix size");
+
+        Matrix result = *this;
+
+        for (unsigned long row = 0; row < this->row(); ++row) {
+            for (unsigned long col = 0; col < this->col(); ++col) {
+                result._data[row][col] -= other._data[row][col];
+            }
+        }
+
+        return result;
+    }
+
+    template<class Type>
+    Matrix<Type>& Matrix<Type>::operator+=(const Matrix &other) {
+        if (this->row() != other.row() || this->col() != other.col())
+            throw std::invalid_argument("invalid matrix size");
+
+        for (unsigned long row = 0; row < this->row(); ++row) {
+            for (unsigned long col = 0; col < this->col(); ++col) {
+                this->_data[row][col] += other._data[row][col];
+            }
+        }
+
+        return *this;
+    }
+
+    template<class Type>
+    Matrix<Type>& Matrix<Type>::operator-=(const Matrix &other) {
+        if (this->row() != other.row() || this->col() != other.col())
+            throw std::invalid_argument("invalid matrix size");
+
+        Matrix result = *this;
+
+        for (unsigned long row = 0; row < this->row(); ++row) {
+            for (unsigned long col = 0; col < this->col(); ++col) {
+                this->_data[row][col] -= other._data[row][col];
+            }
+        }
+
+        return *this;
     }
 
 

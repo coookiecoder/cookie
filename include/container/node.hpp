@@ -9,7 +9,7 @@
 
 
 #ifndef PROTECTION_ENABLED
-#define PROTECTION_ENABLED false
+#define PROTECTION_ENABLED true
 #endif
 
 namespace cookie {
@@ -23,12 +23,12 @@ namespace cookie {
         public:
             explicit Node();
             explicit Node(const Type* data);
-            explicit Node(const Type data);
+            explicit Node(Type data);
             explicit Node(const Type& data);
             explicit Node(const Type&& data);
 
-            void setNext(Node<Type>* next);
-            void setPrev(Node<Type>* prev);
+            void setNext(Node* next);
+            void setPrev(Node* prev);
 
             Node* getNext();
             Node* getPrev();
@@ -78,7 +78,7 @@ namespace cookie {
     }
 
     template <class Type>
-    void Node<Type>::setNext(Node<Type>* next)
+    void Node<Type>::setNext(Node* next)
     {
         if (PROTECTION_ENABLED && this->_next)
             throw std::runtime_error("Next node already set clear it first : ");
@@ -86,7 +86,7 @@ namespace cookie {
     }
 
     template <class Type>
-    void Node<Type>::setPrev(Node<Type>* prev)
+    void Node<Type>::setPrev(Node* prev)
     {
         if (PROTECTION_ENABLED && this->_prev)
             throw std::runtime_error("Previous node already set clear it first : ");

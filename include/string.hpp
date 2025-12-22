@@ -4,7 +4,6 @@
 
 namespace cookie {
     class string {
-        private:
             char*           _data = nullptr;
             unsigned long   _size = 0;
 
@@ -18,7 +17,7 @@ namespace cookie {
 
             string& operator=(const string& ref);
             string& operator=(string&& ref) noexcept;
-            string& operator=(const char* string);
+            string& operator=(const char* c_string);
 
             string& operator+=(const string& rhs);
             string& operator+=(const char* rhs);

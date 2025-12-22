@@ -144,7 +144,7 @@ namespace cookie {
     }
 
     template <class Type>
-    const Type& List<Type>::operator[](unsigned long index)
+    const Type& List<Type>::operator[](const unsigned long index)
     {
         Node<Type>* current = this->_start;
 

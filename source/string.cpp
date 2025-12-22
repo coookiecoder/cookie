@@ -27,7 +27,7 @@ cookie::string::string(const char *c_string) {
 
     for (int index = 0; index < this->_size; index++) {
         this->_data[index] = c_string[index];
-    };
+    }
 
     this->_data[this->_size] = '\0';
 }
@@ -111,7 +111,7 @@ cookie::string& cookie::string::operator=(const char *c_string) {
 }
 
 cookie::string& cookie::string::operator+=(const string &rhs) {
-    char* result = new char[this->_size + rhs._size + 1];
+    const auto result = new char[this->_size + rhs._size + 1];
 
     for (int index = 0; index < this->_size; index++) {
         result[index] = this->_data[index];
@@ -136,7 +136,7 @@ cookie::string& cookie::string::operator+=(const char *rhs) {
     while (rhs[size_rhs])
         size_rhs++;
 
-    char* result = new char[this->_size + size_rhs + 1];
+    const auto result = new char[this->_size + size_rhs + 1];
 
     for (int index = 0; index < this->_size; index++) {
         result[index] = this->_data[index];
