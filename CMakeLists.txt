@@ -8,16 +8,27 @@ include_directories(include)
 
 add_library(cookie_string OBJECT
 		source/string.cpp
+		include/string.hpp
 )
 
 add_library(cookie_matrix OBJECT
 		source/matrix.cpp
+		source/matrix/matrix2D.cpp
+		source/matrix/matrix3D.cpp
+		source/matrix/matrix4D.cpp
+		include/matrix.hpp
+		include/matrix/matrix2D.hpp
+		include/matrix/matrix3D.hpp
+		include/matrix/matrix4D.hpp
 )
 
 add_library(cookie_container OBJECT
 		source/container/list.cpp
 		source/container/node.cpp
 		source/container/array.cpp
+		include/container/list.hpp
+		include/container/node.hpp
+		include/container/array.hpp
 )
 
 add_library(cookie STATIC
