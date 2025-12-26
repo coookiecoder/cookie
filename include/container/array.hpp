@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-
 namespace cookie {
     template <class Type, unsigned long>
     class ArrayHeap {

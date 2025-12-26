@@ -31,10 +31,26 @@ add_library(cookie_container OBJECT
 		include/container/array.hpp
 )
 
+add_library(cookie_server OBJECT
+		source/server/tcp.cpp
+		source/server/udp.cpp
+		include/server/tcp.hpp
+		include/server/udp.hpp
+)
+
+add_library(cookie_client OBJECT
+		source/client/tcp.cpp
+		source/client/udp.cpp
+		include/client/tcp.hpp
+		include/client/udp.hpp
+)
+
 add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_string>
 		$<TARGET_OBJECTS:cookie_matrix>
 		$<TARGET_OBJECTS:cookie_container>
+		$<TARGET_OBJECTS:cookie_server>
+		$<TARGET_OBJECTS:cookie_client>
 )
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp)
