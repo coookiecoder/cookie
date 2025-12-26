@@ -6,6 +6,10 @@
 #include <algorithm>
 #include <thread>
 
+std::string place_holder(std::string str) {
+    return str;
+}
+
 namespace cookie::server {
     udp::udp(const int port) : _is_running(false) {
         this->_port = port;
@@ -27,6 +31,8 @@ namespace cookie::server {
             close(this->_socket);
             throw std::runtime_error(__PRETTY_FUNCTION__ + std::string(": bind()"));
         }
+
+        this->_default_callback = place_holder;
     }
 
     void udp::map_response(const std::string& command, std::function<std::string(std::string)> callback) {

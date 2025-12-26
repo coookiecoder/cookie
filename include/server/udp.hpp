@@ -1,11 +1,12 @@
 #pragma once
 
-#include <netinet/in.h>
 #include <string>
 #include <functional>
 #include <map>
 #include <atomic>
 #include <thread>
+
+#include <netinet/in.h>
 
 namespace cookie::server {
     class udp {
