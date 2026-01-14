@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <thread>
 
-std::string place_holder(std::string str) {
+std::string place_holder_server(std::string str) {
     return str;
 }
 
@@ -32,7 +32,7 @@ namespace cookie::server {
             throw std::runtime_error(__PRETTY_FUNCTION__ + std::string(": bind()"));
         }
 
-        this->_default_callback = place_holder;
+        this->_default_callback = place_holder_server;
     }
 
     void udp::map_response(const std::string& command, std::function<std::string(std::string)> callback) {
