@@ -84,7 +84,7 @@ namespace cookie::client {
     void udp::_run() {
         while (_is_running) {
             char buffer[1024];
-            ssize_t bytes_read = recv(this->_socket, buffer, sizeof(buffer) - 1, 0);
+            ssize_t bytes_read = recvfrom(this->_socket, buffer, sizeof(buffer) - 1, 0, nullptr, nullptr);
 
             if (bytes_read > 0) {
                 buffer[bytes_read] = '\0';
