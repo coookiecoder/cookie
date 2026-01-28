@@ -53,6 +53,8 @@ add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_client>
 )
 
+target_include_directories(cookie PUBLIC include)
+
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp)
 	add_executable(test test/main.cpp)
 	target_link_libraries(test cookie)
