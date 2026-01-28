@@ -43,6 +43,14 @@ namespace cookie::client {
         _callbacks.erase(command);
     }
 
+    void tcp::map_response_word(const std::string& command, std::function<std::string(std::string)> callback) {
+        this->_callbacks_word[command] = std::move(callback);
+    }
+
+    void tcp::unmap_response_word(const std::string& command) {
+        _callbacks_word.erase(command);
+    }
+
     void tcp::map_default(std::function<std::string(std::string)> callback) {
         this->_default_callback = std::move(callback);
     }
@@ -101,10 +109,19 @@ namespace cookie::client {
                 if (auto it = _callbacks.find(command); it != _callbacks.end()) {
                     if (std::string response = it->second(command); !response.empty())
                         this->send(response);
-                } else {
-                    if (std::string response = _default_callback(command); !response.empty())
-                        this->send(response);
+                    continue;
                 }
+
+                std::string command_word = command.substr(0, command.find(' '));
+
+                if (auto it = _callbacks_word.find(command_word); it != _callbacks_word.end()) {
+                    if (std::string response = it->second(command); !response.empty())
+                        this->send(response);
+                    continue;
+                }
+
+                if (std::string response = _default_callback(command); !response.empty())
+                    this->send(response);
             } else {
                 _is_running = false;
                 break;

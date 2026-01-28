@@ -23,6 +23,14 @@ namespace cookie::server {
             throw std::runtime_error(__PRETTY_FUNCTION__ + std::string(": setsockopt()"));
         }
 
+        timeval read_timeout = {};
+        read_timeout.tv_sec = 1;
+        read_timeout.tv_usec = 0;
+
+        if (setsockopt(_socket, SOL_SOCKET, SO_RCVTIMEO, (&read_timeout), sizeof(read_timeout)) < 0) {
+            throw std::runtime_error(__PRETTY_FUNCTION__ + std::string(": setsockopt()"));
+        }
+
         this->_server_address.sin_family = AF_INET;
         this->_server_address.sin_addr.s_addr = INADDR_ANY;
         this->_server_address.sin_port = htons(this->_port);
@@ -41,6 +49,14 @@ namespace cookie::server {
 
     void udp::unmap_response(const std::string& command) {
         _callbacks.erase(command);
+    }
+
+    void udp::map_response_word(const std::string& command, std::function<std::string(std::string)> callback) {
+        this->_callbacks_word[command] = std::move(callback);
+    }
+
+    void udp::unmap_response_word(const std::string& command) {
+        _callbacks_word.erase(command);
     }
 
     void udp::map_default(std::function<std::string(std::string)> callback) {
@@ -94,8 +110,18 @@ namespace cookie::server {
             if (auto it = _callbacks.find(command); it != _callbacks.end()) {
                 std::string response = it->second(command);
                 sendto(_socket, response.c_str(), response.length(), 0, reinterpret_cast<sockaddr *>(&client_address), client_length);
-            } else {
-                std::string response = _default_callback(command);
+                continue;
+            }
+
+            std::string command_word = command.substr(0, command.find(' '));
+
+            if (auto it = _callbacks_word.find(command_word); it != _callbacks_word.end()) {
+                std::string response = it->second(command);
+                sendto(_socket, response.c_str(), response.length(), 0, reinterpret_cast<sockaddr *>(&client_address), client_length);
+                continue;
+            }
+
+            if (std::string response = _default_callback(command); !response.empty()) {
                 sendto(_socket, response.c_str(), response.length(), 0, reinterpret_cast<sockaddr *>(&client_address), client_length);
             }
        }

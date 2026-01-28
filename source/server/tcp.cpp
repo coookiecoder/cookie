@@ -48,6 +48,14 @@ namespace cookie::server {
         _callbacks.erase(command);
     }
 
+    void tcp::map_response_word(const std::string& command, std::function<std::string(std::string)> callback) {
+        this->_callbacks_word[command] = std::move(callback);
+    }
+
+    void tcp::unmap_response_word(const std::string& command) {
+        _callbacks_word.erase(command);
+    }
+
     void tcp::map_default(std::function<std::string(std::string)> callback) {
         _default_callback = std::move(callback);
     }
@@ -119,16 +127,28 @@ namespace cookie::server {
                         close(client_socket);
                         _client_sockets.erase(_client_sockets.begin() + i);
                         --i;
-                    } else {
+                    } else
+                    {
                         buffer[bytes_read] = '\0';
                         std::string command(buffer);
                         std::erase(command, '\n');
                         std::erase(command, '\r');
+
                         if (auto it = _callbacks.find(command); it != _callbacks.end()) {
                             std::string response = it->second(command);
                             send(client_socket, response.c_str(), response.length(), 0);
-                        } else {
-                            std::string response = _default_callback(command);
+                            continue;
+                        }
+
+                        std::string command_word = command.substr(0, command.find(' '));
+
+                        if (auto it = _callbacks_word.find(command_word); it != _callbacks_word.end()) {
+                            std::string response = it->second(command);
+                            send(client_socket, response.c_str(), response.length(), 0);
+                            continue;
+                        }
+
+                        if (std::string response = _default_callback(command); !response.empty()) {
                             send(client_socket, response.c_str(), response.length(), 0);
                         }
                     }
