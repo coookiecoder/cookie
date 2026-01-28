@@ -127,8 +127,7 @@ namespace cookie::server {
                         close(client_socket);
                         _client_sockets.erase(_client_sockets.begin() + i);
                         --i;
-                    } else
-                    {
+                    } else {
                         buffer[bytes_read] = '\0';
                         std::string command(buffer);
                         std::erase(command, '\n');
