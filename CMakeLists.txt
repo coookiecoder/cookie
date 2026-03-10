@@ -6,6 +6,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3")
 
 include_directories(include)
 
+add_library(cookie_parser OBJECT
+		source/parser/ArgumentParser.cpp
+		include/parser/ArgumentParser.hpp
+)
+
 add_library(cookie_string OBJECT
 		source/string.cpp
 		include/string.hpp
@@ -46,6 +51,7 @@ add_library(cookie_client OBJECT
 )
 
 add_library(cookie STATIC
+		$<TARGET_OBJECTS:cookie_parser>
 		$<TARGET_OBJECTS:cookie_string>
 		$<TARGET_OBJECTS:cookie_matrix>
 		$<TARGET_OBJECTS:cookie_container>
