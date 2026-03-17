@@ -50,6 +50,11 @@ add_library(cookie_client OBJECT
 		include/client/udp.hpp
 )
 
+add_library(cookie_gpio OBJECT
+		source/gpio/chip.cpp
+		include/gpio/chip.hpp
+)
+
 add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_parser>
 		$<TARGET_OBJECTS:cookie_string>
@@ -57,6 +62,7 @@ add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_container>
 		$<TARGET_OBJECTS:cookie_server>
 		$<TARGET_OBJECTS:cookie_client>
+		$<TARGET_OBJECTS:cookie_gpio>
 )
 
 target_include_directories(cookie PUBLIC include)
