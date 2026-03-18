@@ -50,6 +50,15 @@ add_library(cookie_gpio OBJECT
 		include/gpio/chip.hpp
 )
 
+add_library(cookie_output OBJECT
+		source/output/info.cpp
+		source/output/warn.cpp
+		source/output/error.cpp
+		include/output/info.hpp
+		include/output/warn.hpp
+		include/output/error.hpp
+)
+
 add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_parser>
 		$<TARGET_OBJECTS:cookie_matrix>
@@ -57,6 +66,7 @@ add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_server>
 		$<TARGET_OBJECTS:cookie_client>
 		$<TARGET_OBJECTS:cookie_gpio>
+		$<TARGET_OBJECTS:cookie_output>
 )
 
 target_include_directories(cookie PUBLIC include)
