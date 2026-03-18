@@ -11,11 +11,6 @@ add_library(cookie_parser OBJECT
 		include/parser/ArgumentParser.hpp
 )
 
-add_library(cookie_string OBJECT
-		source/string.cpp
-		include/string.hpp
-)
-
 add_library(cookie_matrix OBJECT
 		source/matrix.cpp
 		source/matrix/matrix2D.cpp
@@ -57,7 +52,6 @@ add_library(cookie_gpio OBJECT
 
 add_library(cookie STATIC
 		$<TARGET_OBJECTS:cookie_parser>
-		$<TARGET_OBJECTS:cookie_string>
 		$<TARGET_OBJECTS:cookie_matrix>
 		$<TARGET_OBJECTS:cookie_container>
 		$<TARGET_OBJECTS:cookie_server>
