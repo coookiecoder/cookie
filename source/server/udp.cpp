@@ -4,9 +4,11 @@
 #include <iostream>
 #include <unistd.h>
 #include <algorithm>
+#include <mutex>
 #include <thread>
+#include <set>
 
-std::string place_holder_server(std::string str) {
+std::string place_holder_server(std::string str, sockaddr_in) {
     return str;
 }
 
@@ -43,7 +45,7 @@ namespace cookie::server {
         this->_default_callback = place_holder_server;
     }
 
-    void udp::map_response(const std::string& command, std::function<std::string(std::string)> callback) {
+    void udp::map_response(const std::string& command, std::function<std::string(std::string, sockaddr_in)> callback) {
         _callbacks[command] = std::move(callback);
     }
 
@@ -51,7 +53,7 @@ namespace cookie::server {
         _callbacks.erase(command);
     }
 
-    void udp::map_response_word(const std::string& command, std::function<std::string(std::string)> callback) {
+    void udp::map_response_word(const std::string& command, std::function<std::string(std::string, sockaddr_in)> callback) {
         this->_callbacks_word[command] = std::move(callback);
     }
 
@@ -59,7 +61,7 @@ namespace cookie::server {
         _callbacks_word.erase(command);
     }
 
-    void udp::map_default(std::function<std::string(std::string)> callback) {
+    void udp::map_default(std::function<std::string(std::string, sockaddr_in)> callback) {
         _default_callback = std::move(callback);
     }
 
@@ -82,6 +84,12 @@ namespace cookie::server {
 
         if (_server_thread.joinable()) {
             _server_thread.join();
+        }
+    }
+
+    void udp::broadcast(const std::string& message) const {
+        for (const auto& client_address : this->client_addresses) {
+            sendto(_socket, message.c_str(), message.size(), 0, reinterpret_cast<const sockaddr *>(&client_address), sizeof(sockaddr_in));
         }
     }
 
@@ -108,7 +116,7 @@ namespace cookie::server {
             std::erase(command, '\r');
 
             if (auto it = _callbacks.find(command); it != _callbacks.end()) {
-                std::string response = it->second(command);
+                std::string response = it->second(command, client_address);
                 sendto(_socket, response.c_str(), response.length(), 0, reinterpret_cast<sockaddr *>(&client_address), client_length);
                 continue;
             }
@@ -116,12 +124,12 @@ namespace cookie::server {
             std::string command_word = command.substr(0, command.find(' '));
 
             if (auto it = _callbacks_word.find(command_word); it != _callbacks_word.end()) {
-                std::string response = it->second(command);
+                std::string response = it->second(command, client_address);
                 sendto(_socket, response.c_str(), response.length(), 0, reinterpret_cast<sockaddr *>(&client_address), client_length);
                 continue;
             }
 
-            if (std::string response = _default_callback(command); !response.empty()) {
+            if (std::string response = _default_callback(command, client_address); !response.empty()) {
                 sendto(_socket, response.c_str(), response.length(), 0, reinterpret_cast<sockaddr *>(&client_address), client_length);
             }
        }
