@@ -1,5 +1,7 @@
 #include <gpio/chip.hpp>
 
+#ifdef __linux__
+
 #include <cstring>
 #include <stdexcept>
 
@@ -52,3 +54,5 @@ namespace cookie::gpio {
         ioctl(this->_line_fd.find(number)->second.fd, GPIO_V2_LINE_SET_VALUES_IOCTL, &values);
     }
 }
+
+#endif

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef __linux__
+
 #include <string>
 #include <map>
 #include <linux/gpio.h>
@@ -17,3 +19,5 @@ namespace cookie::gpio {
             std::map<int, gpio_v2_line_request> _line_fd;
     };
 };
+
+#endif
