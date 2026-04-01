@@ -47,7 +47,9 @@ add_library(cookie_client OBJECT
 
 add_library(cookie_gpio OBJECT
 		source/gpio/chip.cpp
+		source/gpio/pwm.cpp
 		include/gpio/chip.hpp
+		include/gpio/pwm.hpp
 )
 
 add_library(cookie_output OBJECT
