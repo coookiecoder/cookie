@@ -112,8 +112,6 @@ namespace cookie::server {
 
             buffer[bytes_read] = '\0';
             std::string command(buffer);
-            std::erase(command, '\n');
-            std::erase(command, '\r');
 
             if (auto it = _callbacks.find(command); it != _callbacks.end()) {
                 std::string response = it->second(command, client_address);

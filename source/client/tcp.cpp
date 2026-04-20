@@ -103,8 +103,6 @@ namespace cookie::client {
             if (bytes_read > 0) {
                 buffer[bytes_read] = '\0';
                 std::string command(buffer);
-                std::erase(command, '\n');
-                std::erase(command, '\r');
 
                 if (auto it = _callbacks.find(command); it != _callbacks.end()) {
                     if (std::string response = it->second(command); !response.empty())
