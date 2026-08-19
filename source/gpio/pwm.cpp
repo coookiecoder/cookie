@@ -15,7 +15,7 @@ namespace cookie::gpio {
     }
 
     void Pwm::set_period(const int channel, const int period) const {
-        std::ofstream period_file(this->chip_path + "/period");
+        std::ofstream period_file(this->chip_path + "/period" + std::to_string(channel) + "/period");
         period_file << std::to_string(period);
         period_file.close();
     }
@@ -33,7 +33,7 @@ namespace cookie::gpio {
     }
 
     void Pwm::disable(const int channel) const {
-        std::ofstream disable_file(this->chip_path + "/pwm" + std::to_string(channel) + "/disable");
+        std::ofstream disable_file(this->chip_path + "/pwm" + std::to_string(channel) + "/enable");
         disable_file << "0";
         disable_file.close();
     }
